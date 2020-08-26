@@ -37,7 +37,7 @@ pub fn deno_plugin_init(interface: &mut dyn Interface) {
 /// |   NUM_CPUS (8) |                |                |                |
 /// +----------------+----------------+----------------+----------------+
 /// ```
-/// 
+///
 /// The number of cpu on each machine will not be greater than 256(2^8),
 /// so we use 1 byte to pass the return value.
 pub fn op_num_cpus(
