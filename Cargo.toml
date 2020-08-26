@@ -1,6 +1,6 @@
 [package]
 name = "deno_plugin_num_cpus"
-version = "0.1.1"
+version = "0.1.2"
 description = "Get the number of CPUs available on the current system for Deno."
 authors = ["迷渡 <justjavac@gmail.com>"]
 edition = "2018"
