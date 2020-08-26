@@ -7,7 +7,7 @@ edition = "2018"
 readme = "README.md"
 repository = "https://github.com/justjavac/deno_plugin_num_cpus"
 license = "MIT"
-keywords = ["deno", "deno_core", "deno_plguin", "cpu", "cpus", "cores"]
+keywords = ["deno", "deno_plguin", "cpu", "cpus", "cores"]
 categories = ["hardware-support"]
 
 [lib]
