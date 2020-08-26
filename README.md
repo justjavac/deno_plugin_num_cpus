@@ -2,8 +2,8 @@
 
 [![Build Status](https://github.com/justjavac/deno_plugin_num_cpus/workflows/ci/badge.svg?branch=master)](https://github.com/justjavac/deno_plugin_num_cpus/actions)
 [![tag](https://img.shields.io/github/release/justjavac/deno_plugin_num_cpus)](https://github.com/justjavac/deno_plugin_num_cpus/releases)
-[![Crates.io](https://img.shields.io/crates/v/deno_plguin_starter)](https://crates.io/crates/deno_plguin_starter)
-[![Docs.rs](https://docs.rs/deno_plguin_starter/badge.svg)](https://docs.rs/deno_plguin_starter)
+[![Crates.io](https://img.shields.io/crates/v/deno_plugin_num_cpus)](https://crates.io/crates/deno_plugin_num_cpus)
+[![Docs.rs](https://docs.rs/deno_plugin_num_cpus/badge.svg)](https://docs.rs/deno_plugin_num_cpus)
 [![license](https://img.shields.io/github/license/justjavac/deno_plugin_num_cpus)](https://github.com/justjavac/deno_plugin_num_cpus/blob/master/LICENSE)
 
 Rust [num_cpus](https://crates.io/crates/num_cpus) binding for Deno.
