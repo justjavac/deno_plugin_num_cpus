@@ -1,0 +1,22 @@
+[package]
+name = "deno_plguin_starter"
+version = "0.1.2"
+authors = ["迷渡 <justjavac@gmail.com>"]
+edition = "2018"
+description = "Quickly start a Deno plugin."
+readme = "README.md"
+repository = "https://github.com/justjavac/deno_plugin_starter"
+license = "MIT"
+keywords = ["deno", "deno_core", "deno_plguin"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+deno_core = "0.54.0"
+futures = "0.3.5"
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
