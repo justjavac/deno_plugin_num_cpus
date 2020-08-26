@@ -1,58 +1,50 @@
-//! This crate provides a Deno plugin library.
+//! Get the number of CPUs available on the current system.
+//!
+//! Sometimes the CPU will exaggerate the number of CPUs it contains, because it
+//! can use [processor tricks](https://en.wikipedia.org/wiki/Simultaneous_multithreading)
+//! to deliver increased performance when there are more threads.
+//! This crate provides methods to get both the logical and physical numbers of cores.
+//!
+//! This information can be used as a guide to how many tasks can be run in parallel.
+//! There are many properties of the system architecture that will affect parallelism,
+//! for example memory access speeds (for all the caches and RAM) and the physical
+//! architecture of the processor, so the number of CPUs should be used as a rough guide only.
 
-use deno_core::plugin_api::Buf;
-use deno_core::plugin_api::Interface;
-use deno_core::plugin_api::Op;
-use deno_core::plugin_api::ZeroCopyBuf;
-use futures::future::FutureExt;
+extern crate deno_core;
+extern crate num_cpus;
+
+use deno_core::plugin_api::{Buf, Interface, Op, ZeroCopyBuf};
 
 /// Initializing the Deno plugin.
 #[no_mangle]
 pub fn deno_plugin_init(interface: &mut dyn Interface) {
-  interface.register_op("op_test_sync", op_test_sync);
-  interface.register_op("op_test_async", op_test_async);
+  interface.register_op("op_num_cpus", op_num_cpus);
 }
 
-fn op_test_sync(
+/// Get the number of CPUs available on the current system.
+///
+/// Use in Deno:
+///
+/// ```ts
+/// const { op_num_cpus } = Deno.core.ops();
+/// const response: Uint8Array = Deno.core.dispatch(op_num_cpus)!;
+/// ```
+///
+/// Returned Binary Layout:
+///
+/// ```
+/// +----------------+----------------+----------------+----------------+
+/// |   NUM_CPUS (8) |                |                |                |
+/// +----------------+----------------+----------------+----------------+
+/// ```
+/// 
+/// The number of cpu on each machine will not be greater than 256(2^8),
+/// so we use 1 byte to pass the return value.
+pub fn op_num_cpus(
   _interface: &mut dyn Interface,
-  zero_copy: &mut [ZeroCopyBuf],
+  _zero_copy: &mut [ZeroCopyBuf],
 ) -> Op {
-  if !zero_copy.is_empty() {
-    println!("Hello from plugin.");
-  }
-  let zero_copy = zero_copy.to_vec();
-  for (idx, buf) in zero_copy.iter().enumerate() {
-    let buf_str = std::str::from_utf8(&buf[..]).unwrap();
-    println!("zero_copy[{}]: {}", idx, buf_str);
-  }
-  let result = b"test";
-  let result_box: Buf = Box::new(*result);
-  Op::Sync(result_box)
-}
-
-fn op_test_async(
-  _interface: &mut dyn Interface,
-  zero_copy: &mut [ZeroCopyBuf],
-) -> Op {
-  if !zero_copy.is_empty() {
-    println!("Hello from plugin.");
-  }
-  let zero_copy = zero_copy.to_vec();
-  let fut = async move {
-    for (idx, buf) in zero_copy.iter().enumerate() {
-      let buf_str = std::str::from_utf8(&buf[..]).unwrap();
-      println!("zero_copy[{}]: {}", idx, buf_str);
-    }
-    let (tx, rx) = futures::channel::oneshot::channel::<Result<(), ()>>();
-    std::thread::spawn(move || {
-      std::thread::sleep(std::time::Duration::from_secs(1));
-      tx.send(Ok(())).unwrap();
-    });
-    assert!(rx.await.is_ok());
-    let result = b"test";
-    let result_box: Buf = Box::new(*result);
-    result_box
-  };
-
-  Op::Async(fut.boxed())
+  let nums = num_cpus::get() as u8;
+  let result: Buf = Box::new([nums]);
+  Op::Sync(result)
 }
